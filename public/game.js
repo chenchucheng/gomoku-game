@@ -13,6 +13,14 @@ canvas.height = BOARD_SIZE * CELL_SIZE;
 
 let gameState = null;
 let isProcessing = false;
+let sessionId = localStorage.getItem('gomoku_session_id') || generateSessionId();
+
+// Generate a new session ID and save it to localStorage
+function generateSessionId() {
+  const id = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+  localStorage.setItem('gomoku_session_id', id);
+  return id;
+}
 
 // Draw the board
 function drawBoard() {
@@ -133,8 +141,16 @@ function updateStatus() {
 
 async function fetchGameState() {
   try {
-    const response = await fetch('/api/game');
-    gameState = await response.json();
+    const response = await fetch('/api/game', {
+      headers: { 'X-Session-ID': sessionId }
+    });
+    const data = await response.json();
+    // Update session ID if server returned a new one
+    if (data.sessionId) {
+      sessionId = data.sessionId;
+      localStorage.setItem('gomoku_session_id', sessionId);
+    }
+    gameState = data.state;
     drawBoard();
     updateStatus();
   } catch (error) {
@@ -152,13 +168,21 @@ async function makeMove(x, y) {
   try {
     const response = await fetch('/api/game/move', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Session-ID': sessionId
+      },
       body: JSON.stringify({ x, y })
     });
 
     const data = await response.json();
 
     if (data.success) {
+      // Update session ID if server returned a new one
+      if (data.sessionId) {
+        sessionId = data.sessionId;
+        localStorage.setItem('gomoku_session_id', sessionId);
+      }
       gameState = data.state;
       drawBoard();
       updateStatus();
@@ -182,10 +206,21 @@ async function resetGame() {
   isProcessing = true;
 
   try {
-    const response = await fetch('/api/game/reset', { method: 'POST' });
+    const response = await fetch('/api/game/reset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Session-ID': sessionId
+      }
+    });
     const data = await response.json();
 
     if (data.success) {
+      // Update session ID if server returned a new one
+      if (data.sessionId) {
+        sessionId = data.sessionId;
+        localStorage.setItem('gomoku_session_id', sessionId);
+      }
       gameState = data.state;
       drawBoard();
       updateStatus();
@@ -203,10 +238,21 @@ async function undoMove() {
   isProcessing = true;
 
   try {
-    const response = await fetch('/api/game/undo', { method: 'POST' });
+    const response = await fetch('/api/game/undo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Session-ID': sessionId
+      }
+    });
     const data = await response.json();
 
     if (data.success) {
+      // Update session ID if server returned a new one
+      if (data.sessionId) {
+        sessionId = data.sessionId;
+        localStorage.setItem('gomoku_session_id', sessionId);
+      }
       gameState = data.state;
       drawBoard();
       updateStatus();
