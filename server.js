@@ -59,6 +59,15 @@ app.post('/api/game/undo', (req, res) => {
     return res.status(404).json({ success: false, message: 'Session not found' });
   }
 
+  const historyLength = session.game.getState().moveHistory.length;
+
+  if (historyLength < 2) {
+    return res.status(400).json({
+      success: false,
+      message: 'Not enough moves to undo'
+    });
+  }
+
   // Undo both player and AI moves
   session.game.undo();
   session.game.undo();
