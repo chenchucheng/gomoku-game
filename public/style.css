@@ -1,0 +1,153 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Microsoft YaHei', Arial, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.status {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: bold;
+}
+
+#undoBtn {
+  background: #ffa502;
+  color: white;
+}
+
+#undoBtn:hover {
+  background: #e69500;
+  transform: translateY(-2px);
+}
+
+#resetBtn {
+  background: #ff4757;
+  color: white;
+}
+
+#resetBtn:hover {
+  background: #e64050;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.board-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#board {
+  border: 3px solid #8B4513;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #DEB887;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 15px;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1em;
+}
+
+.stone {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.stone.black {
+  background: radial-gradient(circle at 30% 30%, #666, #000);
+}
+
+.stone.white {
+  background: radial-gradient(circle at 30% 30%, #fff, #ddd);
+  border: 1px solid #ccc;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  .game-info {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  #board {
+    max-width: 100%;
+    height: auto;
+  }
+}
